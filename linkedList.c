@@ -121,18 +121,42 @@ struct node* deleteMid(struct node *head,int pos){
 }
 void view (struct node *head){
         struct node* ptr=head;
-        printf("\nLINKED LIST\n");
-        while(ptr!=NULL){
-            printf("\n%d",ptr->data);
-            ptr=ptr->link;
+        if(head==NULL)
+            printf("EMPTY LINKEDLIST\n");
+        else{
+            printf("\nLINKED LIST\n");
+            while(ptr!=NULL){
+                printf("\n%d",ptr->data);
+                ptr=ptr->link;
+            }
         }
         printf("\n");
 } 
+int search(struct node *head,int element){
+    struct node *ptr=head;
+    int count;
+    if(head==NULL){
+        printf("Empty linkedlist\n");
+        return -1;
+    }
+    else{
+        while(ptr!=NULL){
+            count++;
+            if(ptr->data==element){
+                printf("Elemet is present in %d th position\n",count);
+                return count;
+            }
+            ptr=ptr->link;
+        }
+    }
+    printf("Element is not present\n");
+    return -1;
+}
 void main(){
     struct node *head = NULL;
     int dis,inDis,value,pos;
     do{
-        printf("\n1-INSERTION\n2-DELETION\n3-VIEW\n4-EXIT \nENTER : ");
+        printf("\n1-INSERTION\n2-DELETION\n3-SEARCH\n4-VIEW\n5-EXIT \nENTER : ");
         scanf("%d",&dis);
         if(dis==1){
             do{
@@ -166,9 +190,14 @@ void main(){
                 head=deleteMid(head,pos);
             }
         }
-        else if(dis==3)
+        else if(dis==3){
+            printf("\tENTER ELEMENT : ");
+            scanf("%d",&value);
+            value=search(head,value);
+        }
+        else if(dis==4)
             view(head);
-    }while(dis!=4);  
+    }while(dis!=5);  
     free(head);
     head=NULL;
 }
