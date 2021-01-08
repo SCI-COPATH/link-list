@@ -7,28 +7,25 @@ struct node {
 struct node* makeNode(){
     struct node *ptr=NULL;
     ptr=(struct node *)malloc(sizeof(struct node));
-    printf("%d\n",ptr);
-    if(ptr==NULL){
+    if(ptr==NULL)
         printf("Memory Problem \n");
-        exit(0);
-    }
     return ptr;
 }
-void insertFront(struct node *head,int value){
+struct node* insertFront(struct node *head,int value){
     if(head==NULL){
         head=makeNode();
         head->data=value;
         head->link=NULL;
-        printf("%d",head);
     }
     else{
         struct node *temp=makeNode();
         temp->link=head;
-        temp->data=value;
+        temp->data=value;   
         head=temp;
     }
+    return head;
 }
-void insertEnd(struct node *head ,int value){
+struct node* insertEnd(struct node *head ,int value){
     struct node *ptr=head,*temp;
     if(head==NULL){
         head=makeNode();
@@ -36,15 +33,16 @@ void insertEnd(struct node *head ,int value){
         head->link=NULL;
     }
     else{
-        while(ptr!=NULL)
+        while(ptr->link!=NULL)
             ptr=ptr->link;
         temp=makeNode();
         temp->data=value;
         temp->link=NULL;
         ptr->link=temp;
     }
+    return head;
 }
-void insertMid(struct node *head ,int pos,int value){
+struct node* insertMid(struct node *head ,int pos,int value){
     struct node *ptr=head,*temp=head;
     int count=0;
     pos--;
@@ -52,7 +50,8 @@ void insertMid(struct node *head ,int pos,int value){
         temp=temp->link;
         count++;
     }
-    if(pos<=0||pos>=count-1)
+     printf("pos is %d and count %d",pos,count);
+    if(pos<=0||pos>count-1)
         printf("Wrong input\n");
     else{
         for(int i=1;i<pos;i++)
@@ -62,8 +61,9 @@ void insertMid(struct node *head ,int pos,int value){
         temp->link=ptr->link;
         ptr->link=temp;
     }
+    return head;
 }
-void deletFront(struct node *head){
+struct node* deletFront(struct node *head){
     struct node *ptr=head;
     if(head==NULL)
         printf("No elemet here");
@@ -73,39 +73,51 @@ void deletFront(struct node *head){
         free(ptr);
         ptr=NULL;
     }
+    return head;
 }
-void deleteEnd(struct node *head){
-    struct node *ptr;
+struct node* deleteEnd(struct node *head){
+    struct node *ptr=head;
     if(head==NULL)
         printf("No elemet here");
     else{
-        while(ptr->link!=NULL){
-            ptr=ptr->link;
+        if(ptr->link==NULL){
+            printf("Remove element is %d\n",ptr->data);
+            free(ptr);
+            ptr=NULL;
+            head=NULL;
         }
-        printf("Remove element is %d\n",ptr->link->data);
-        free(ptr->link);
-        ptr->link=NULL;
+        else{
+            while(ptr->link->link!=NULL)
+                ptr=ptr->link;
+            printf("Remove element is %d\n",ptr->link->data);
+            free(ptr->link);
+            ptr->link=NULL;
+            ptr=NULL;
+        }
     }
+    return head;
 }
-void deleteMid(struct node *head,int pos){
-    struct node *ptr=head;
+struct node* deleteMid(struct node *head,int pos){
+    struct node *ptr=head,*temp=head;
     pos--;
     int count =0;
-    while(ptr!=NULL){
+    while(temp!=NULL){
         count++;
-        ptr=ptr->link;
+        temp=temp->link;
     }
-    if(pos<=0||pos>=count-1)
+    if(pos<=0||pos>count-1)
         printf("Wrong input \n");
     else{
         for(int i=1;i<pos;i++)
             ptr=ptr->link;
-        struct node *temp=ptr->link;
+        temp=ptr->link;
         ptr->link=ptr->link->link;
         printf("Removed element is %d\n",temp->data);
         free(temp);
         temp=NULL;
+        ptr=NULL;
     }
+    return head;
 }
 void view (struct node *head){
         struct node* ptr=head;
@@ -120,45 +132,43 @@ void main(){
     struct node *head = NULL;
     int dis,inDis,value,pos;
     do{
-        printf("\n1-INSERTION\n2-DELETION\n3-VIEW\n4-EXIT \n: ");
+        printf("\n1-INSERTION\n2-DELETION\n3-VIEW\n4-EXIT \nENTER : ");
         scanf("%d",&dis);
         if(dis==1){
             do{
-                printf("\n\t1-INSERTION FORM START\n\t2-INSERTION FORM END\n\t3-INSERTION IN POSITION \n : ");
+                printf("\n\t1-INSERTION FORM START\n\t2-INSERTION FORM END\n\t3-INSERTION IN POSITION \n\tENTER : ");
                 scanf("%d",&inDis);
             }while(!(inDis==1||inDis==2||inDis==3));
             printf("\t\tEnter value : ");
             scanf("%d",&value);
-            if(inDis==1){
-                insertFront(head,value);
-                printf("\n%d",head);
-            }
+            if(inDis==1)
+                head=insertFront(head,value);
             else if(inDis==2)
-                insertEnd(head,value);
+                head=insertEnd(head,value);
             else if(inDis==3){
-                printf("\t\tRead position (1,2,3....n-1): ");
+                printf("\t\tRead position (2,3....n-1): ");
                 scanf("%d",&pos);
-                insertMid(head,pos,value);
+                head=insertMid(head,pos,value);
             }
         }
         else if(dis==2){
             do{
-                printf("\n\t1-DELETE FORM START\n\t2-DELETE FORM END\n\t3-DELETE IN POSITION \n : ");
+                printf("\n\t1-DELETE FORM START\n\t2-DELETE FORM END\n\t3-DELETE IN POSITION \n\tENTER  : ");
                 scanf("%d",&inDis);
             }while(!(inDis==1||inDis==2||inDis==3));
             if(inDis==1)
-                deletFront(head);
+                head=deletFront(head);
             else if(inDis==2)
-                deleteEnd(head);
+                head=deleteEnd(head);
             else if(inDis==3){
-                printf("\t\tRead position (1,2,3....n-1): ");
+                printf("\t\tRead position (2,3....n-1): ");
                 scanf("%d",&pos);
-                deleteMid(head,pos);
+                head=deleteMid(head,pos);
             }
         }
         else if(dis==3)
             view(head);
-    }while(dis!=4);
+    }while(dis!=4);  
     free(head);
     head=NULL;
 }
